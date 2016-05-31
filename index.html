@@ -9,18 +9,42 @@
 		#holder {
 			margin: 0;
 			float: left;
+			width: 100px;
+		}
+
+		#myCanvas {
+			float: left;
+			border: 1px solid #ccc;
+			margin-right: 10px;
 		}
 	</style>
 </head>
 <body>
-	<canvas id="myCanvas" width="800" height="600" style="border: 1px solid #ccc; float: left;"></canvas>
+	<canvas id="myCanvas" width="800" height="600"></canvas>
+	<div id="holder">
+		<div>
+		<label>x:</label><input type="text" id="x" />
+		<label>y:</label><input type="text" id="y" />
+		<label>tamanho:</label><input type="text" id="tamanho" />
+		</div>
+
+		<input type="submit" id="submitButton" onclick="submitFunction()" />
+	</div>
 	<script>
 		var canvas = document.getElementById('myCanvas');
 		var context = canvas.getContext('2d');
-		var vertex = {x:0, y:0};
+		
+		function drawSquare(x, y, size) {
+			var x0 = x;
+			var y0 = y;
 
-		function drawVertices(x0, y0, v1, v2, v3, v4) {
 			context.beginPath();
+			context.moveTo(x, y);
+
+			context.lineTo(x, y+size);
+			context.lineTo(x+size, y+size);
+			context.lineTo(x+size, y);
+			context.lineTo(x, y);
 
 			context.stroke();
 		}
@@ -51,33 +75,9 @@
 		}
 
 		function submitFunction() {
-			alert('ok');
+			drawSquare(50, 50, 200);
 		}
 
 	</script>
-<div id="holder" style="clear: both;">
-	<div>
-	<label>v1:</label>
-	<input type="text" id="v1_x" />
-	<input type="text" id="v1_y" />
-	</div>
-
-	<label>v2:</label>
-	<input type="text" name="v2_x" id="v2_x" />
-	<input type="text" name="v2_y" id="v2_y" />
-	</div>
-
-	<label>v3:</label>
-	<input type="text" name="v3_x" id="v3_x" />
-	<input type="text" name="v3_y" id="v3_y" />
-	</div>
-
-	<label>v4:</label>
-	<input type="text" name="v4_x" id="v4_x" />
-	<input type="text" name="v4_y" id="v4_y" />
-	</div>
-
-	<input type="submit" id="submitButton" onclick="submitFunction()" />
-</div>
 </body>
 </html>      
