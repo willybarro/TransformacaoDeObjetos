@@ -75,15 +75,13 @@
         context.lineTo(square.p4.x, square.p4.y);
         context.lineTo(square.p1.x, square.p1.y);
 
-        context.fillRect(square.center.x, square.center.y, 1, 1);
-
         context.strokeStyle = hexColor;
         context.stroke();
     }
 
     // Retorna uma matriz
-    function translacao(square, dx, dy) {
-        var p = [[square.center.x,square.center.y,1]];
+    function translacao(x, y, dx, dy) {
+        var p = [[x,y,1]];
 
         var t = [[1,0,0],
                  [0,1,0],
@@ -93,9 +91,36 @@
     }
 
     // Retorna uma matriz
-    function rotacao() {
+    function rotacao(x, y, degrees) {
+        var p = [[x, y, 1]];
 
+        var r = [[Math.cos(degrees), Math.sin(degrees), 0],
+             [-Math.sin(degrees), Math.cos(degrees), 0],
+             [0,0,1]];
+
+        var p_linha = multiplicaMatriz(p, r);
+        return p_linha;
     }
+//    //FUNCAO CAGADA
+//    function rotacoes(degrees) {
+//        var newPos = translacao(squareOriginal.center.x, squareOriginal.center.y, -squareOriginal.center.x, -squareOriginal.center.y)[0];
+//        var newSquare = constructSquare(newPos[0], newPos[1], squareOriginal.size);
+//        var p1_linha = rotacao(newSquare.p1.x, newSquare.p1.y, degrees)[0];
+//        p1_linha = translacao(p1_linha[0], p1_linha[1], squareOriginal.center.x, squareOriginal.center.y)[0];
+//        var p2_linha = rotacao(newSquare.p1.x, newSquare.p1.y, degrees)[0];
+//        p2_linha = translacao(p2_linha[0], p2_linha[1], squareOriginal.center.x, squareOriginal.center.y)[0];
+//        var p3_linha = rotacao(newSquare.p1.x, newSquare.p1.y, degrees)[0];
+//        p3_linha = translacao(p3_linha[0], p3_linha[1], squareOriginal.center.x, squareOriginal.center.y)[0];
+//        var p4_linha = rotacao(newSquare.p1.x, newSquare.p1.y, degrees)[0];
+//        p4_linha = translacao(p4_linha[0], p4_linha[1], squareOriginal.center.x, squareOriginal.center.y)[0];
+//        var p1 = {x:p1_linha[0], y:p1_linha[1]};
+//        var p2 = {x:p2_linha[0], y:p2_linha[1]};
+//        var p3 = {x:p3_linha[0], y:p3_linha[1]};
+//        var p4 = {x:p4_linha[0], y:p4_linha[1]};
+//        newSquare = {p1:p1, p2:p2, p3:p3, p4:p4};
+//        drawSquare(newSquare, "#000000")
+//
+//    }
 
     // Retorna uma matriz
     function escala() {
@@ -115,7 +140,7 @@
     function submitTranslacao() {
         var x = parseInt(document.getElementById('x_trans').value);
         var y = parseInt(document.getElementById('y_trans').value);
-        var newPos = translacao(squareOriginal, x, y);
+        var newPos = translacao(squareOriginal.center.x, squareOriginal.center.y, x, y);
         var newSquare = constructSquare(newPos[0][0], newPos[0][1], squareOriginal.size)
         drawSquare(newSquare, "#000000");
     }
