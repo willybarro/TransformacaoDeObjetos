@@ -29,6 +29,7 @@
 		</div>
 
 		<input type="submit" id="submitButton" onclick="submitFunction()" />
+		<input type="button" id="cleanCanvas" onclick="cleanCanvas()" value="Limpar canvas"/>
 	</div>
 	<script>
 		var canvas = document.getElementById('myCanvas');
@@ -75,7 +76,14 @@
 		}
 
 		function submitFunction() {
-			drawSquare(50, 50, 200);
+			var x = document.getElementById('x').value;
+			var y = document.getElementById('y').value;
+			var size = document.getElementById('tamanho').value;
+			drawSquare(x, y, size);
+		}
+		
+		function cleanCanvas() {
+			context.clearRect(0, 0, canvas.width, canvas.height);
 		}
 
 	</script>
