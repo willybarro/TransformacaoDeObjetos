@@ -1,91 +1,104 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<style>
-		body {
-			margin: 0px;
-			padding: 0px;
-		}
-		#holder {
-			margin: 0;
-			float: left;
-			width: 100px;
-		}
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+        #holder {
+            margin: 0;
+            float: left;
+            width: 100px;
+        }
 
-		#myCanvas {
-			float: left;
-			border: 1px solid #ccc;
-			margin-right: 10px;
-		}
-	</style>
+        #myCanvas {
+            float: left;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-	<canvas id="myCanvas" width="800" height="600"></canvas>
-	<div id="holder">
-		<div>
-		<label>x:</label><input type="text" id="x" />
-		<label>y:</label><input type="text" id="y" />
-		<label>tamanho:</label><input type="text" id="tamanho" />
-		</div>
+<canvas id="myCanvas" width="800" height="600"></canvas>
+<div id="holder">
+    <div>
+        <label>x:</label><input type="text" id="x" />
+        <label>y:</label><input type="text" id="y" />
+        <label>tamanho:</label><input type="text" id="tamanho" />
+    </div>
 
-		<input type="submit" id="submitButton" onclick="submitFunction()" />
-		<input type="button" id="cleanCanvas" onclick="cleanCanvas()" value="Limpar canvas"/>
-	</div>
-	<script>
-		var canvas = document.getElementById('myCanvas');
-		var context = canvas.getContext('2d');
-		
-		function drawSquare(x, y, size) {
-			var x0 = x;
-			var y0 = y;
+    <input type="submit" id="submitButton" onclick="submitFunction()" />
+    <input type="button" id="cleanCanvas" onclick="cleanCanvas()" value="Limpar canvas"/>
+</div>
+<script>
+    var canvas = document.getElementById('myCanvas');
+    var context = canvas.getContext('2d');
+    var squareOriginal;
 
-			context.beginPath();
-			context.moveTo(x, y);
+    function constructSquare(x, y, size) {
+        p1 = {x:x, y:y};
+        p2 = {x:x, y:y+size};
+        p3 = {x:x+size, y:y+size};
+        p4 = {x:x+size, y:y};
+        center = {x:x+(size/2), y:y+(size/2)};
+        return {p1:p1, p2:p2, p3:p3, p4:p4, center}
+    }
 
-			context.lineTo(x, y+size);
-			context.lineTo(x+size, y+size);
-			context.lineTo(x+size, y);
-			context.lineTo(x, y);
+    function position(x, y) {
+        return {x:x, y:y}
+    }
 
-			context.stroke();
-		}
+    function drawSquare(square, hexColor) {
+        context.beginPath();
+        context.moveTo(square.p1.x, square.p1.y);
 
-		// Retorna uma matriz
-		function translacao() {
+        context.lineTo(square.p2.x, square.p2.y);
+        context.lineTo(square.p3.x, square.p3.y);
+        context.lineTo(square.p4.x, square.p4.y);
+        context.lineTo(square.p1.x, square.p1.y);
+        context.fillRect(square.center.x, square.center.y, 1, 1);
+        context.strokeStyle = hexColor;
+        context.stroke();
+    }
 
-		}
+    // Retorna uma matriz
+    function translacao(x, y) {
 
-		// Retorna uma matriz
-		function rotacao() {
+    }
 
-		}
+    // Retorna uma matriz
+    function rotacao() {
 
-		// Retorna uma matriz
-		function escala() {
+    }
 
-		}
+    // Retorna uma matriz
+    function escala() {
 
-		// Retorna uma matriz
-		function cisalhamento() {
+    }
 
-		}
+    // Retorna uma matriz
+    function cisalhamento() {
 
-		// Retorna uma matriz
-		function reflexao(x, y) {
+    }
 
-		}
+    // Retorna uma matriz
+    function reflexao(x, y) {
 
-		function submitFunction() {
-			var x = document.getElementById('x').value;
-			var y = document.getElementById('y').value;
-			var size = document.getElementById('tamanho').value;
-			drawSquare(x, y, size);
-		}
-		
-		function cleanCanvas() {
-			context.clearRect(0, 0, canvas.width, canvas.height);
-		}
+    }
 
-	</script>
+    function submitFunction() {
+        var x = parseInt(document.getElementById('x').value);
+        var y = parseInt(document.getElementById('y').value);
+        var size = parseInt(document.getElementById('tamanho').value);
+        squareOriginal = constructSquare(x, y, size);
+        drawSquare(squareOriginal, '#ff0000');
+    }
+
+    function cleanCanvas() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+</script>
 </body>
-</html>      
+</html>
