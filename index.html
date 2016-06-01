@@ -17,6 +17,12 @@
             border: 1px solid #ccc;
             margin-right: 10px;
         }
+        #trans{
+            margin-left: -100px;
+            margin-top: 200px;
+            float: left;
+            width: 100px;
+        }
     </style>
 </head>
 <body>
@@ -31,18 +37,29 @@
     <input type="submit" id="submitButton" onclick="submitFunction()" />
     <input type="button" id="cleanCanvas" onclick="cleanCanvas()" value="Limpar canvas"/>
 </div>
+<div id="trans">
+    <div>
+        <label>x:</label><input type="text" id="x_trans" />
+        <label>y:</label><input type="text" id="y_trans" />
+    </div>
+
+    <input type="submit" onclick="submitTranslacao()" />
+</div>
 <script>
     var canvas = document.getElementById('myCanvas');
     var context = canvas.getContext('2d');
     var squareOriginal;
 
     function constructSquare(x, y, size) {
-        p1 = {x:x, y:y};
-        p2 = {x:x, y:y+size};
-        p3 = {x:x+size, y:y+size};
-        p4 = {x:x+size, y:y};
-        center = {x:x+(size/2), y:y+(size/2)};
-        return {p1:p1, p2:p2, p3:p3, p4:p4, center}
+        var center = {x:x, y:y};
+        x -= size/2;
+        y -= size/2;
+        var p1 = {x:x, y:y};
+        var p2 = {x:x, y:y+size};
+        var p3 = {x:x+size, y:y+size};
+        var p4 = {x:x+size, y:y};
+
+        return {p1:p1, p2:p2, p3:p3, p4:p4, center:center, size:size}
     }
 
     function position(x, y) {
@@ -57,14 +74,22 @@
         context.lineTo(square.p3.x, square.p3.y);
         context.lineTo(square.p4.x, square.p4.y);
         context.lineTo(square.p1.x, square.p1.y);
+
         context.fillRect(square.center.x, square.center.y, 1, 1);
+
         context.strokeStyle = hexColor;
         context.stroke();
     }
 
     // Retorna uma matriz
-    function translacao(x, y) {
+    function translacao(square, dx, dy) {
+        var p = [[square.center.x,square.center.y,1]];
 
+        var t = [[1,0,0],
+                 [0,1,0],
+                 [dx,dy,1]];
+        var p_linha = multiplicaMatriz(p,t);
+        return p_linha;
     }
 
     // Retorna uma matriz
@@ -87,6 +112,14 @@
 
     }
 
+    function submitTranslacao() {
+        var x = parseInt(document.getElementById('x_trans').value);
+        var y = parseInt(document.getElementById('y_trans').value);
+        var newPos = translacao(squareOriginal, x, y);
+        var newSquare = constructSquare(newPos[0][0], newPos[0][1], squareOriginal.size)
+        drawSquare(newSquare, "#000000");
+    }
+
     function submitFunction() {
         var x = parseInt(document.getElementById('x').value);
         var y = parseInt(document.getElementById('y').value);
@@ -98,6 +131,24 @@
     function cleanCanvas() {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
+    
+    function multiplicaMatriz(a, b) {
+        var i, j, s, r, k;
+        c = [];
+        for (i = 0; i < a.length; i++) {
+            r = [];
+            for (j = 0; j < b[0].length; j++) {
+                s = 0;
+                for (k = 0; k < b.length; k++) {
+                    s += a[i][k] * b[k][j];
+                }
+                r.push(s);
+            }
+            c.push(r);
+        }
+        return c;
+    }
+
 
 </script>
 </body>
