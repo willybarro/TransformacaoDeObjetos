@@ -49,6 +49,22 @@
     var canvas = document.getElementById('myCanvas');
     var context = canvas.getContext('2d');
     var squareOriginal;
+    
+    window.onload = function () {
+      desenhaQuadrantes();
+    };
+    
+    function desenhaQuadrantes() {
+        var y = canvas.width/2;
+        var x = canvas.height/2;
+        context.beginPath();
+        context.moveTo(y, 0);
+        context.lineTo(y, canvas.height);
+        context.moveTo(0, x);
+        context.lineTo(canvas.width, x);
+        context.strokeStyle = "#000000";
+        context.stroke();
+    }
 
     function constructSquare(x, y, size) {
         var center = {x:x, y:y};
@@ -68,12 +84,15 @@
 
     function drawSquare(square, hexColor) {
         context.beginPath();
-        context.moveTo(square.p1.x, square.p1.y);
+        var width_to_zero = canvas.width/2;
+        var height_to_zero = canvas.height/2;
 
-        context.lineTo(square.p2.x, square.p2.y);
-        context.lineTo(square.p3.x, square.p3.y);
-        context.lineTo(square.p4.x, square.p4.y);
-        context.lineTo(square.p1.x, square.p1.y);
+        context.moveTo(square.p1.x + width_to_zero, square.p1.y + height_to_zero);
+
+        context.lineTo(square.p2.x + width_to_zero, square.p2.y + height_to_zero);
+        context.lineTo(square.p3.x + width_to_zero, square.p3.y + height_to_zero);
+        context.lineTo(square.p4.x + width_to_zero, square.p4.y + height_to_zero);
+        context.lineTo(square.p1.x + width_to_zero, square.p1.y + height_to_zero);
 
         context.strokeStyle = hexColor;
         context.stroke();
@@ -146,6 +165,8 @@
 
     function cleanCanvas() {
         context.clearRect(0, 0, canvas.width, canvas.height);
+        desenhaQuadrantes();
+        squareOriginal = '';
     }
     
     function multiplicaMatriz(a, b) {
