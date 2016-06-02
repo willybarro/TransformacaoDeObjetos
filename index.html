@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+    <meta charset="utf-8">
     <style>
         body {
             margin: 0px;
@@ -17,37 +18,68 @@
             border: 1px solid #ccc;
             margin-right: 10px;
         }
-        #trans{
-            margin-left: -100px;
-            margin-top: 200px;
-            float: left;
-            width: 100px;
-        }
     </style>
 </head>
 <body>
 <canvas id="myCanvas" width="800" height="600"></canvas>
 <div id="holder">
     <div>
+        <h3>Criar Quadrado:</h3>
         <label>x:</label><input type="text" id="x" />
         <label>y:</label><input type="text" id="y" />
         <label>tamanho:</label><input type="text" id="tamanho" />
+        <input type="submit" id="submitButton" onclick="submitFunction()" />
+        <input type="button" id="cleanCanvas" onclick="cleanCanvas()" value="Limpar canvas"/>
     </div>
 
-    <input type="submit" id="submitButton" onclick="submitFunction()" />
-    <input type="button" id="cleanCanvas" onclick="cleanCanvas()" value="Limpar canvas"/>
-</div>
-<div id="trans">
+
+
     <div>
+        <h3>Translação</h3>
         <label>x:</label><input type="text" id="x_trans" />
         <label>y:</label><input type="text" id="y_trans" />
+        <input type="submit" onclick="submitTranslacao()" />
     </div>
 
-    <input type="submit" onclick="submitTranslacao()" />
+    <div>
+        <h3>Rotação</h3>
+        <label>Graus:</label><input type="text" id="graus" />
+        <input type="submit" onclick="submitRotacao();" />
+    </div>
+
+    <div>
+        <h3>Escala</h3>
+        <label>x:</label><input type="text" id="x_escala" />
+        <label>y:</label><input type="text" id="y_escala" />
+        <input type="submit" onclick="submitEscala();" />
+    </div>
+
+    <div>
+        <h3>cisalhamento</h3>
+        <label>x:</label><input type="text" id="" />
+        <label>y:</label><input type="text" id="" />
+        <input type="submit" onclick="" />
+    </div>
+
+    <div>
+        <h3>reflexao</h3>
+        <label>x:</label><input type="text" id="" />
+        <label>y:</label><input type="text" id="" />
+        <input type="submit" onclick="" />
+    </div>
+
+    <div>
+        <h3>Commit</h3>
+        <label>Hex Color:</label><input type="text" id="hexColor" />
+        <input type="submit" onclick="commitChanges();">
+    </div>
 </div>
+
+
 <script>
     var canvas = document.getElementById('myCanvas');
     var context = canvas.getContext('2d');
+    var filaMatriz = [];
     var squareOriginal;
     
     window.onload = function () {
@@ -76,10 +108,6 @@
         var p4 = {x:x+size, y:y};
 
         return {p1:p1, p2:p2, p3:p3, p4:p4, center:center, size:size}
-    }
-
-    function position(x, y) {
-        return {x:x, y:y}
     }
 
     function drawSquare(square, hexColor) {
@@ -151,9 +179,20 @@
     function submitTranslacao() {
         var x = parseInt(document.getElementById('x_trans').value);
         var y = parseInt(document.getElementById('y_trans').value);
-        var newSquare = aplicaMatriz(squareOriginal, translacao(x, y));
-        drawSquare(newSquare, "#000000");
+        filaMatriz.push(translacao(x, y));
     }
+
+    function submitRotacao() {
+        var graus = parseInt(document.getElementById('graus').value);
+        filaMatriz.push(rotacao(graus));
+    }
+
+    function submitEscala(){
+        var x = parseInt(document.getElementById('x_escala').value);
+        var y = parseInt(document.getElementById('y_escala').value);
+        filaMatriz.push(escala(x, y));
+    }
+
 
     function submitFunction() {
         var x = parseInt(document.getElementById('x').value);
@@ -163,10 +202,21 @@
         drawSquare(squareOriginal, '#ff0000');
     }
 
+    function commitChanges() {
+        var color = document.getElementById('hexColor').value;
+        var matriz = filaMatriz.shift();
+        while (filaMatriz.length > 0){
+            matriz = multiplicaMatriz(matriz, filaMatriz.shift());
+        }
+        var newSquare = aplicaMatriz(squareOriginal, matriz);
+        drawSquare(newSquare, color);
+    }
+
     function cleanCanvas() {
         context.clearRect(0, 0, canvas.width, canvas.height);
         desenhaQuadrantes();
         squareOriginal = '';
+        filaMatriz = [];
     }
     
     function multiplicaMatriz(a, b) {
