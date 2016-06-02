@@ -63,9 +63,9 @@
 
     <div>
         <h3>cisalhamento</h3>
-        <label>x:</label><input type="text" />
-        <label>y:</label><input type="text"  />
-        <input type="submit" onclick="" />
+        <label>x:</label><input type="text" id="x_cis" />
+        <label>y:</label><input type="text" id="y_cis"/>
+        <input type="submit" onclick="submitCisalhamento()" />
     </div>
 
     <div>
@@ -129,9 +129,11 @@
     // Retorna uma matriz
     function translacao(dx, dy) {
 
-        var matriz = [[1,0,0],
-                 [0,1,0],
-                 [dx,dy,1]];
+        var matriz = [
+            [1,0,0],
+            [0,1,0],
+            [dx,dy,1]
+        ];
         return matriz;
     }
 
@@ -146,15 +148,23 @@
 
     // Retorna uma matriz
     function escala(sx, sy) {
-        var matriz = [[sx,0,0],
-                      [0,sy,0],
-                      [0,0,1]];
+
+        var matriz = [
+            [sx, 0, 0],
+            [0, sy, 0],
+            [0, 0, 1]
+        ];
+
         return matriz;
     }
 
     // Retorna uma matriz
-    function cisalhamento() {
+    function cisalhamento(shx, shy) {
+        var matriz = [[1,shx,0],
+                      [shy,1,0],
+                      [0,0,1]]
 
+        return matriz;
     }
 
     // Retorna uma matriz
@@ -195,19 +205,19 @@
     }
 
     function submitTranslacao() {
-        var x = parseInt(document.getElementById('x_trans').value);
-        var y = parseInt(document.getElementById('y_trans').value);
+        var x = parseFloat(document.getElementById('x_trans').value);
+        var y = parseFloat(document.getElementById('y_trans').value);
         filaMatriz.push(translacao(x, y));
     }
 
     function submitRotacao() {
-        var graus = parseInt(document.getElementById('graus').value);
+        var graus = parseFloat(document.getElementById('graus').value);
         filaMatriz.push(rotacao(graus));
     }
 
     function submitEscala(){
-        var x = parseInt(document.getElementById('x_escala').value);
-        var y = parseInt(document.getElementById('y_escala').value);
+        var x = parseFloat(document.getElementById('x_escala').value);
+        var y = parseFloat(document.getElementById('y_escala').value);
         filaMatriz.push(escala(x, y));
     }
 
@@ -217,10 +227,16 @@
         filaMatriz.push(reflexao(x, y));
     }
 
+    function submitCisalhamento(){
+        var x = parseFloat(document.getElementById('x_cis').value);
+        var y = parseFloat(document.getElementById('y_cis').value);
+        filaMatriz.push(cisalhamento(x, y));
+    }
+
 
     function submitFunction() {
-        var x = parseInt(document.getElementById('x').value);
-        var y = parseInt(document.getElementById('y').value);
+        var x = parseFloat(document.getElementById('x').value);
+        var y = parseFloat(document.getElementById('y').value);
         var size = parseInt(document.getElementById('tamanho').value);
         squareOriginal = constructSquare(x, y, size);
         drawSquare(squareOriginal, '#ff0000');
