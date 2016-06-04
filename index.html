@@ -2,83 +2,131 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <style>
         body {
             margin: 0;
             padding: 0;
         }
-        #holder {
-            margin: 0;
+
+        .base {
+            margin: 0 10px 0 10px;
+        }
+        #options {
+            width: 200px;
+            margin: 10px;
             float: left;
-            width: 100px;
+        }
+
+        #options input[type=text] {
+            width: 30px;
+            font-family: "Courier New";
+            height: 20px;
+        }
+
+        #canvasWrap {
+            float: left;
+            text-align: center;
         }
 
         #myCanvas {
             float: left;
-            border: 1px solid #ccc;
-            margin-right: 10px;
+            border: 1px dotted #ccc;
+            margin: 10px;
+        }
+
+        #options #hexColor {
+            width: 100%;
         }
     </style>
 </head>
 <body>
-<canvas id="myCanvas" width="800" height="600"></canvas>
-<div id="holder">
-    <div>
+
+<div id="canvasWrap">
+    <div class="base">
         <h3>Criar Quadrado:</h3>
-        <label>x:</label><input type="text" id="x" />
-        <label>y:</label><input type="text" id="y" />
-        <label>tamanho:</label><input type="text" id="tamanho" />
-        <input type="submit" id="submitButton" onclick="submitFunction()" />
-        <input type="button" id="cleanCanvas" onclick="cleanCanvas()" value="Limpar canvas"/>
+        <label>X:</label>
+        <input type="text" id="x" placeholder="0" />
+
+        <label>Y:</label>
+        <input type="text" id="y" placeholder="0" />
+
+        <label>Tamanho:</label>
+        <input type="text" placeholder="100" id="tamanho" />
+
+        <input type="submit" id="submitButton" onclick="submitFunction()" value="Criar"/>
     </div>
+    <canvas id="myCanvas" width="800" height="600"></canvas><br />
+    <input type="button" id="cleanCanvas" onclick="cleanCanvas()" value="Limpar canvas"/>
+</div>
+<div id="options">
+    <div class="additional">
+        <h3>Operações</h3>
+        <div>
+            <h4>Translação</h4>
+            <label>X:</label>
+            <input type="text" id="x_trans" />
+            <label>Y:</label>
+            <input type="text" id="y_trans" />
+            <input type="submit" onclick="submitTranslacao()" value="+" />
+        </div>
 
+        <div>
+            <h4>Rotação</h4>
+            <label>Graus:</label>
+            <input type="text" id="graus" placeholder="45" />
+            <input type="submit" onclick="submitRotacao();" value="+" />
+        </div>
 
+        <div>
+            <h4>Escala</h4>
+            <label>X:</label>
+            <input type="text" id="x_escala" />
+            <label>Y:</label>
+            <input type="text" id="y_escala" />
+            <input type="submit" onclick="submitEscala();" value="+" />
+        </div>
 
-    <div>
-        <h3>Translação</h3>
-        <label>x:</label><input type="text" id="x_trans" />
-        <label>y:</label><input type="text" id="y_trans" />
-        <input type="submit" onclick="submitTranslacao()" />
-    </div>
+        <div>
+            <h4>Reflexão</h4>
+            <label>X:</label>
+            <input type="checkbox" id="x_reflex"/>
 
-    <div>
-        <h3>Rotação</h3>
-        <label>Graus:</label><input type="text" id="graus" />
-        <input type="submit" onclick="submitRotacao();" />
-    </div>
+            <label>Y:</label>
+            <input type="checkbox"  id="y_reflex" />
 
-    <div>
-        <h3>Escala</h3>
-        <label>x:</label><input type="text" id="x_escala" />
-        <label>y:</label><input type="text" id="y_escala" />
-        <input type="submit" onclick="submitEscala();" />
-    </div>
+            <input type="submit" onclick="submitReflexao();" value="+" />
+        </div>
 
-    <div>
-        <h3>reflexao</h3>
-        <label>x:</label><input type="checkbox" id="x_reflex"/>
-        <label>y:</label><input type="checkbox"  id="y_reflex" />
-        <input type="submit" onclick="submitReflexao();" />
-    </div>
+        <div>
+            <h4>Cisalhamento</h4>
+            <label>X:</label>
+            <input type="text" id="x_cis" />
+            <label>Y:</label>
+            <input type="text" id="y_cis"/>
+            <input type="submit" onclick="submitCisalhamento()" value="+" />
+        </div>
 
-    <div>
-        <h3>cisalhamento</h3>
-        <label>x:</label><input type="text" id="x_cis" />
-        <label>y:</label><input type="text" id="y_cis"/>
-        <input type="submit" onclick="submitCisalhamento()" />
-    </div>
-
-    <div>
-        <h3>Commit</h3>
-        <label>Hex Color:</label><input type="text" id="hexColor" />
-        <input type="submit" onclick="commitChanges();">
+        <div>
+            <h4>Cor da linha</h4>
+            <input type="text" id="hexColor" />
+            <hr />
+        </div>
+        <div>
+            <h4>Operações</h4>
+            <div id="resumo"></div>
+        </div>
+        <div>
+            <input type="submit" onclick="commitChanges();" value="Aplicar operações" />
+        </div>
     </div>
 </div>
 
-
 <script>
-    var canvas = document.getElementById('myCanvas');
+    var canvas = byId('myCanvas');
     var context = canvas.getContext('2d');
+    context.translate(0.5, 0.5); // Hack pra fazer o canvas parar de gerar linhas borradas
+
     var filaMatriz = [];
     var squareOriginal;
     
@@ -94,7 +142,9 @@
         context.lineTo(y, canvas.height);
         context.moveTo(0, x);
         context.lineTo(canvas.width, x);
-        context.strokeStyle = "#000000";
+        context.strokeStyle = "#999";
+        context.lineWidth = 1;
+        context.setLineDash([1, 2]);
         context.stroke();
     }
 
@@ -111,6 +161,8 @@
     }
 
     function drawSquare(square, hexColor) {
+        console.log( hexColor );
+        context.setLineDash([0, 0]);
         context.beginPath();
         var width_to_zero = canvas.width/2;
         var height_to_zero = canvas.height/2;
@@ -139,8 +191,10 @@
 
     // Retorna uma matriz
     function rotacao(degrees) {
-        var matriz = [[Math.cos(degrees), Math.sin(degrees), 0],
-                      [-Math.sin(degrees), Math.cos(degrees), 0],
+        // Converte de graus pra radianos
+        radians = degrees * Math.PI / 180;
+        var matriz = [[Math.cos(radians), Math.sin(radians), 0],
+                      [-Math.sin(radians), Math.cos(radians), 0],
              [0,0,1]];
 
         return matriz;
@@ -205,51 +259,78 @@
     }
 
     function submitTranslacao() {
-        var x = parseFloat(document.getElementById('x_trans').value);
-        var y = parseFloat(document.getElementById('y_trans').value);
+        var x = parseFloat(byId('x_trans').value);
+        var y = parseFloat(byId('y_trans').value);
         filaMatriz.push(translacao(x, y));
+
+        atualizaResumo();
     }
 
     function submitRotacao() {
-        var graus = parseFloat(document.getElementById('graus').value);
+        var graus = parseFloat(byId('graus').value ? byId('graus').value : byId('graus').placeholder);
         filaMatriz.push(rotacao(graus));
+
+        atualizaResumo('Rotação', {graus: graus});
     }
 
     function submitEscala(){
-        var x = parseFloat(document.getElementById('x_escala').value);
-        var y = parseFloat(document.getElementById('y_escala').value);
+        var x = parseFloat(byId('x_escala').value);
+        var y = parseFloat(byId('y_escala').value);
         filaMatriz.push(escala(x, y));
+
+        atualizaResumo();
     }
 
     function submitReflexao(){
-        var x = document.getElementById('x_reflex').checked;
-        var y = document.getElementById('y_reflex').checked;
+        var x = byId('x_reflex').checked;
+        var y = byId('y_reflex').checked;
         filaMatriz.push(reflexao(x, y));
+
+        atualizaResumo();
     }
 
     function submitCisalhamento(){
-        var x = parseFloat(document.getElementById('x_cis').value);
-        var y = parseFloat(document.getElementById('y_cis').value);
+        var x = parseFloat(byId('x_cis').value);
+        var y = parseFloat(byId('y_cis').value);
         filaMatriz.push(cisalhamento(x, y));
+
+        atualizaResumo('Cisalhamento', {x: x, y: y});
     }
 
 
     function submitFunction() {
-        var x = parseFloat(document.getElementById('x').value);
-        var y = parseFloat(document.getElementById('y').value);
-        var size = parseInt(document.getElementById('tamanho').value);
+        var x = parseFloat(byId('x').value ? byId('x').value : byId('x').placeholder);
+        var y = parseFloat(byId('x').value ? byId('y').value : byId('y').placeholder);
+        var size = parseFloat(byId('tamanho').value ? byId('tamanho').value : byId('tamanho').placeholder);
         squareOriginal = constructSquare(x, y, size);
         drawSquare(squareOriginal, '#ff0000');
     }
 
+    function atualizaResumo(operacao, valores) {
+        var html = operacao + ' - ';
+
+        for (i in valores) {
+            html += ' ' + i + ': ' + valores[i] + '<br />';
+        }
+
+        byId('resumo').innerHTML += html;
+        console.log(operacao, valores);
+    }
+
+    function limparResumo() {
+        byId('resumo').innerHTML = '';
+    }
+
     function commitChanges() {
-        var color = document.getElementById('hexColor').value;
+        var color = byId('hexColor').value;
         var matriz = filaMatriz.shift();
         while (filaMatriz.length > 0){
             matriz = multiplicaMatriz(matriz, filaMatriz.shift());
         }
         var newSquare = aplicaMatriz(squareOriginal, matriz);
         drawSquare(newSquare, color);
+
+        limparResumo();
     }
 
     function cleanCanvas() {
@@ -257,6 +338,8 @@
         desenhaQuadrantes();
         squareOriginal = '';
         filaMatriz = [];
+
+        limparResumo();
     }
     
     function multiplicaMatriz(a, b) {
@@ -274,6 +357,10 @@
             c.push(r);
         }
         return c;
+    }
+
+    function byId(elm) {
+        return document.getElementById(elm);
     }
 
 
