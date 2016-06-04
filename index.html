@@ -23,6 +23,13 @@
             font-family: "Courier New";
             height: 20px;
         }
+        #botaoAplicarOperacoes {
+            margin-top: 10px;
+        }
+        input[disabled] {
+            color: #ccc;
+
+        }
 
         #canvasWrap {
             float: left;
@@ -81,9 +88,9 @@
         <div>
             <h4>Escala</h4>
             <label>X:</label>
-            <input type="text" id="x_escala" />
+            <input type="text" id="x_escala" placeholder="2" />
             <label>Y:</label>
-            <input type="text" id="y_escala" />
+            <input type="text" id="y_escala" placeholder="2" />
             <input type="submit" onclick="submitEscala();" value="+" />
         </div>
 
@@ -113,11 +120,11 @@
             <hr />
         </div>
         <div>
-            <h4>Operações</h4>
+            <h4>Fila de operações</h4>
             <div id="resumo"></div>
         </div>
         <div>
-            <input type="submit" onclick="commitChanges();" value="Aplicar operações" />
+            <input type="submit" onclick="commitChanges();" id="botaoAplicarOperacoes" value="Aplicar operações" disabled="disabled" />
         </div>
     </div>
 </div>
@@ -263,22 +270,22 @@
         var y = parseFloat(byId('y_trans').value);
         filaMatriz.push(translacao(x, y));
 
-        atualizaResumo();
+        atualizaResumo('Translação', {'X': x, 'Y': y});
     }
 
     function submitRotacao() {
         var graus = parseFloat(byId('graus').value ? byId('graus').value : byId('graus').placeholder);
         filaMatriz.push(rotacao(graus));
 
-        atualizaResumo('Rotação', {graus: graus});
+        atualizaResumo('Rotação', {'Graus': graus});
     }
 
     function submitEscala(){
-        var x = parseFloat(byId('x_escala').value);
-        var y = parseFloat(byId('y_escala').value);
+        var x = parseFloat(byId('x_escala').value ? byId('x_escala').value : byId('x_escala').placeholder);
+        var y = parseFloat(byId('y_escala').value ? byId('y_escala').value : byId('y_escala').placeholder);
         filaMatriz.push(escala(x, y));
 
-        atualizaResumo();
+        atualizaResumo('Escala', {'X': x, 'Y': y});
     }
 
     function submitReflexao(){
@@ -307,17 +314,21 @@
     }
 
     function atualizaResumo(operacao, valores) {
+        if (filaMatriz.length > 0) {
+            byId('botaoAplicarOperacoes').removeAttribute('disabled');
+        }
         var html = operacao + ' - ';
 
         for (i in valores) {
-            html += ' ' + i + ': ' + valores[i] + '<br />';
+            html += ' ' + i + ': ' + valores[i];
         }
 
-        byId('resumo').innerHTML += html;
+        byId('resumo').innerHTML += html + '<br />';
         console.log(operacao, valores);
     }
 
     function limparResumo() {
+        byId('botaoAplicarOperacoes').disabled = 'disabled';
         byId('resumo').innerHTML = '';
     }
 
