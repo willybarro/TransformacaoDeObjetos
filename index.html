@@ -303,17 +303,16 @@
         var width_to_zero = canvas.width/2;
         var height_to_zero = canvas.height/2;
 
-        context.moveTo(square.p1.x + width_to_zero, square.p1.y + height_to_zero);
+        context.moveTo(square.p1.x + width_to_zero, (height_to_zero - square.p1.y));
 
-        context.lineTo(square.p2.x + width_to_zero, square.p2.y + height_to_zero);
-        context.lineTo(square.p3.x + width_to_zero, square.p3.y + height_to_zero);
-        context.lineTo(square.p4.x + width_to_zero, square.p4.y + height_to_zero);
-        context.lineTo(square.p1.x + width_to_zero, square.p1.y + height_to_zero);
+        context.lineTo(square.p2.x + width_to_zero, (height_to_zero - square.p2.y));
+        context.lineTo(square.p3.x + width_to_zero, (height_to_zero - square.p3.y));
+        context.lineTo(square.p4.x + width_to_zero, (height_to_zero - square.p4.y));
+        context.lineTo(square.p1.x + width_to_zero, (height_to_zero - square.p1.y));
 
         context.strokeStyle = hexColor;
         context.stroke();
     }
-
     
 
     function submitTranslacao() {
