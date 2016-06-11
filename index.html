@@ -81,9 +81,9 @@
         <div>
             <h4>Translação</h4>
             <label>X:</label>
-            <input type="text" id="x_trans" />
+            <input type="text" id="x_trans" placeholder="50" />
             <label>Y:</label>
-            <input type="text" id="y_trans" />
+            <input type="text" id="y_trans" placeholder="50" />
             <input type="submit" onclick="submitTranslacao()" value="+" />
         </div>
 
@@ -117,9 +117,9 @@
         <div>
             <h4>Cisalhamento</h4>
             <label>X:</label>
-            <input type="text" id="x_cis" />
+            <input type="text" id="x_cis" placeholder=".5" />
             <label>Y:</label>
-            <input type="text" id="y_cis"/>
+            <input type="text" id="y_cis" placeholder=".5" />
             <input type="submit" onclick="submitCisalhamento()" value="+" />
         </div>
         <div>
@@ -316,8 +316,8 @@
     
 
     function submitTranslacao() {
-        var x = parseFloat(byId('x_trans').value);
-        var y = parseFloat(byId('y_trans').value);
+        var x = parseFloat(byId('x_trans').value ? byId('x_trans').value : byId('x_trans').placeholder);
+        var y = parseFloat(byId('y_trans').value ? byId('y_trans').value : byId('y_trans').placeholder);
         filaMatriz.push(translacao(x, y));
 
         atualizaResumo('Translação', {'X': x, 'Y': y});
@@ -347,8 +347,8 @@
     }
 
     function submitCisalhamento(){
-        var x = parseFloat(byId('x_cis').value);
-        var y = parseFloat(byId('y_cis').value);
+        var x = parseFloat(byId('x_cis').value ? byId('x_cis').value : byId('x_cis').placeholder);
+        var y = parseFloat(byId('y_cis').value ? byId('y_cis').value : byId('y_cis').placeholder);
         filaMatriz.push(cisalhamento(x, y));
 
         atualizaResumo('Cisalhamento', {'X': x, 'Y': y});
